@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal"
+    >
+
+
+    <Button
+        android:id="@+id/kembali"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/kembali"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="20dp">
+
+
+        <TextView
+            android:id="@+id/toolbartext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:textColor="@color/putih"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            />
+
+        <LinearLayout
+            android:id="@+id/btnsimpan"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:visibility="invisible">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/simpan"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

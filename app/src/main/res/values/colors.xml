@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#E6104D</color>
+    <color name="colorPrimaryDark">#D71149</color>
+    <color name="colorAccent">#4B4B4D</color>
+    <color name="putih">#ffffff</color>
+    <color name="hitam">#4B4B4D</color>
+    <color name="hitamold">#101010</color>
+    <color name="hijau">#35a956</color>
+    <color name="transprant">#003abc41</color>
+    <color name="agaktransparant">#9b000000</color>
+    <color name="merahtua">#4d061a</color>
+    <color name="catatan">#f4f4f4</color>
+    <color name="textisi">#818181</color>
+    <color name="abu">#a2e9e9e9</color>
+    <color name="hitamicon">#4B4B4D</color>
+    <color name="garis">#d6d6d6</color>
+    <color name="garistrans">#b1d6d6d6</color>
+
+    <color name="background">#c1c1c1</color>
+
+
+
+    <color name="eventwarna_kuliah">#6DC38F</color>
+    <color name="eventwarna_tugas">#FDD362</color>
+    <color name="eventwarna_ujian">#EF4B4F</color>
+    <color name="eventwarna_agenda">#00AFEF</color>
+
+</resources>
