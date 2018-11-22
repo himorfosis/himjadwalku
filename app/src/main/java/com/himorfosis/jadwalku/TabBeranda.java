@@ -88,6 +88,21 @@ public class TabBeranda extends Fragment implements AbsListView.OnScrollListener
 
         tanggalsekarang = daysArray[date] + ", " + strtanggal + " " + monthArray[intbulan - 1] + " " + tahun;
 
+        int presensi = 0;
+
+        presensi = SharedPref.getIntPref("durasipresensi", "presensi", getActivity());
+
+        if (presensi == 0) {
+
+            Log.e("presensi", "" +presensi);
+
+        } else {
+
+            Log.e("presensi", "" +presensi);
+
+        }
+
+
         // get kegiatan hari ini
 
         db = new Database(getActivity());

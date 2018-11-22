@@ -22,7 +22,6 @@ public class TampilDialogSystemAlarm extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // Add as notification
 
-
         judul = intent.getStringExtra(JUDUL);
         isi = intent.getStringExtra(ISI);
         gedung = intent.getStringExtra(GEDUNG);

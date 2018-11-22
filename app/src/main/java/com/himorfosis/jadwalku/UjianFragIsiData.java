@@ -309,6 +309,51 @@ public class UjianFragIsiData extends Fragment {
 
                     }
 
+                    // presensi
+
+                    int presensi = SharedPref.getIntPref("durasipresensi", "presensi", getActivity());
+
+                    Intent cekpresensi = new Intent(getActivity(), TampilDialogSystemPresensi.class);
+                    cekpresensi.putExtra("kegiatan", "Ujian");
+                    cekpresensi.putExtra("isi", edmatkul.getText().toString());
+                    cekpresensi.putExtra("tempat", edgedung.getText().toString());
+
+
+                    long diffInSecPresensi = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+                    int diffpres = 0;
+
+                    if (presensi == 1) {
+
+                        diffInSecPresensi = diffInSecPresensi + 900;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 2) {
+
+                        diffInSecPresensi = diffInSecPresensi + 1800;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 3) {
+
+                        diffInSecPresensi = diffInSecPresensi + 3600;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 5) {
+
+                        diffInSecPresensi = diffInSecPresensi + 7200;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else {
+
+                        diffInSecPresensi = diffInSecPresensi + 5400;
+                        diffpres = (int) diffInSecPresensi;
+
+                    }
+
+                    PendingIntent pendingPresensi = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 234324243, cekpresensi, 0);
+                    AlarmManager alarmManager3 = (AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                    alarmManager3.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (diffpres * 1000), pendingPresensi);
+
+
                 }
             }
         });

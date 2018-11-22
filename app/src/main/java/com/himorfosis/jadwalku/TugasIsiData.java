@@ -406,6 +406,52 @@ public class TugasIsiData extends AppCompatActivity {
                         alarmManager2.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (diff2 * 1000), pendingIntent2);
 
                     }
+
+                    // presensi
+
+                    int presensi = SharedPref.getIntPref("durasipresensi", "presensi", getApplicationContext());
+
+                    Intent cekpresensi = new Intent(TugasIsiData.this, TampilDialogSystemPresensi.class);
+                    cekpresensi.putExtra("kegiatan", "Tugas");
+                    cekpresensi.putExtra("isi", edmatkul.getText().toString());
+                    cekpresensi.putExtra("tempat", edgedung.getText().toString());
+
+
+                    long diffInSecPresensi = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+                    int diffpres = 0;
+
+                    if (presensi == 1) {
+
+                        diffInSecPresensi = diffInSecPresensi + 900;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 2) {
+
+                        diffInSecPresensi = diffInSecPresensi + 1800;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 3) {
+
+                        diffInSecPresensi = diffInSecPresensi + 3600;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 5) {
+
+                        diffInSecPresensi = diffInSecPresensi + 7200;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else {
+
+                        diffInSecPresensi = diffInSecPresensi + 5400;
+                        diffpres = (int) diffInSecPresensi;
+
+                    }
+
+                    PendingIntent pendingPresensi = PendingIntent.getBroadcast(getApplicationContext().getApplicationContext(), 234324243, cekpresensi, 0);
+                    AlarmManager alarmManager3 = (AlarmManager) getApplicationContext().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                    alarmManager3.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (diffpres * 1000), pendingPresensi);
+
+
                 }
             }
         });

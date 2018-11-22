@@ -136,6 +136,7 @@ public class TabKalender extends Fragment {
             @Override
             public void onCaldroidViewCreated() {
                 if (caldroidFragment.getLeftArrowButton() != null) {
+
 //                    Toast.makeText(getContext(),
 //                            "Caldroid view is created", Toast.LENGTH_SHORT)
 //                            .show();

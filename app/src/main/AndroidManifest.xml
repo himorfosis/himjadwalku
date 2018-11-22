@@ -76,10 +76,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>
 
+        <activity android:name=".TampilPresensi"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
 
         <receiver android:name=".TampilDialogSystemNotifikasi" />
 
         <receiver android:name=".TampilDialogSystemAlarm" />
+
+        <receiver android:name=".TampilDialogSystemPresensi" />
 
     </application>
 

@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
@@ -37,6 +38,9 @@ public class TampilDialogSystemNotifikasi extends BroadcastReceiver {
         orang = intent.getStringExtra(ORANG);
 
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+
+//        MediaPlayer mPlayer = MediaPlayer.create(context, R.raw.nadanotifikasi);
+//        mPlayer.start();
 
         String RESOURCE_PATH = ContentResolver.SCHEME_ANDROID_RESOURCE + "://";
 

@@ -291,7 +291,6 @@ public class AgendaFragIsiData extends Fragment {
 
                     long diffInSec = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
 
-
                     diffInSec = diffInSec - 600;
                     int notif = (int) diffInSec;
 
@@ -316,18 +315,17 @@ public class AgendaFragIsiData extends Fragment {
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 234324243, intent, 0);
                     AlarmManager notifmanager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-
                     notifmanager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (notif * 1000), pendingIntent);
 
                     Log.e("diff", "" + notif);
 
-                    long notifSec = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
-                    notifSec = notifSec - 1800;
-                    int alarmtime = (int) notifSec;
+//                    long notifSec = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+//                    notifSec = notifSec - 1800;
+//                    int alarmtime = (int) notifSec;
 
-                    Log.e("diff alarm", "= " + alarmtime);
-                    Log.e("diff notif", "= " + notif);
-                    Log.e("diff notif sec", "= " + notifSec);
+//                    Log.e("diff alarm", "= " + alarmtime);
+//                    Log.e("diff notif", "= " + notif);
+//                    Log.e("diff notif sec", "= " + notifSec);
 
 
                     if (!"Tidak ada".equals(tvpengingat.getText().toString())) {
@@ -383,6 +381,66 @@ public class AgendaFragIsiData extends Fragment {
                         Log.e("Alarm", " Aktif");
 
                     }
+
+                    // presensi
+
+                    int presensi = SharedPref.getIntPref("durasipresensi", "presensi", getActivity());
+
+                    Log.e("durasi presensi", "" +presensi);
+
+                    Intent cekpresensi = new Intent(getActivity(), TampilDialogSystemPresensi.class);
+                    cekpresensi.putExtra("kegiatan", "Agenda");
+                    cekpresensi.putExtra("isi", edacara.getText().toString());
+                    cekpresensi.putExtra("tempat", edgedung.getText().toString());
+
+
+                    long diffInSecPresensi = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+                    int diffpres = 0;
+
+                    Log.e("diff presensi", ""+diffInSecPresensi);
+
+                    if (presensi == 0) {
+
+                        Log.e("presensi aktif", "aktif 0");
+
+                        diffInSecPresensi = diffInSecPresensi + 60;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 1) {
+
+                        diffInSecPresensi = diffInSecPresensi + 900;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 2) {
+
+                        diffInSecPresensi = diffInSecPresensi + 1800;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 3) {
+
+                        diffInSecPresensi = diffInSecPresensi + 3600;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else if (presensi == 5) {
+
+                        diffInSecPresensi = diffInSecPresensi + 7200;
+                        diffpres = (int) diffInSecPresensi;
+
+                    } else {
+
+                        Log.e("presensi aktif", " 60");
+
+                        diffInSecPresensi = diffInSecPresensi + 60;
+                        diffpres = (int) diffInSecPresensi;
+
+                    }
+
+                    Log.e("pres aktif", "" +diffInSecPresensi);
+                    Log.e("diffpress", "" +diffpres);
+
+                    PendingIntent pendingPresensi = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 234324243, cekpresensi, 0);
+                    AlarmManager alarmManager = (AlarmManager) getActivity().getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (diffpres * 1000), pendingPresensi);
 
                 }
             }

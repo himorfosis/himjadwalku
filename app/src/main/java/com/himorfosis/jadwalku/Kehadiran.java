@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,20 +20,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 public class Kehadiran extends AppCompatActivity {
 
     BarChart barChart;
-    ArrayList<String> dates;
-    Random random;
-    ArrayList<BarEntry> barEntries;
+    Database db;
+
+    List<KehadiranClassData> kehadiran = new ArrayList<>();
 
     ArrayList<BarEntry> data = new ArrayList<>();
-    ArrayList<BarEntry> barkuliah = new ArrayList<>();
-    ArrayList<BarEntry> baragenda = new ArrayList<>();
-    ArrayList<BarEntry> bartugas = new ArrayList<>();
-    ArrayList<BarEntry> barujian = new ArrayList<>();
+    ArrayList<BarEntry> databolos = new ArrayList<>();
+
 
     ArrayList<Integer> kuliah = new ArrayList<>();
     ArrayList<Integer> agenda = new ArrayList<>();
@@ -42,6 +42,16 @@ public class Kehadiran extends AppCompatActivity {
     ArrayList<BarDataSet> dataSets = new ArrayList<>();
 
     TextView agendahadir, kuliahhadir, ujianhadir, tugashadir, agendabolos, kuliahbolos, ujianbolos, tugasbolos;
+
+    Integer jmlkuliah= 0;
+    Integer jmlujian = 0;
+    Integer jmltugas = 0;
+    Integer jmlagenda = 0;
+    Integer blskuliah = 0;
+    Integer blsujian = 0;
+    Integer blstugas = 0;
+    Integer blsagenda = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,77 +75,29 @@ public class Kehadiran extends AppCompatActivity {
         kuliahbolos = findViewById(R.id.kuliahbolos);
         ujianbolos = findViewById(R.id.ujianbolos);
 
-        kuliah.add(1);
-        kuliah.add(2);
-        kuliah.add(6);
+        db = new Database(Kehadiran.this);
 
-        agenda.add(3);
-        agenda.add(1);
-        agenda.add(1);
+        kehadiran = db.getKehadiran();
 
-        tugas.add(3);
-        tugas.add(2);
-        tugas.add(7);
+        if (kehadiran.isEmpty()) {
 
-        ujian.add(1);
-        ujian.add(1);
-        ujian.add(1);
+            Log.e("data ", "kosong");
 
-        Integer jumlahkuliah = 0;
-        Integer jumlahagenda = 0;
-        Integer jumlahtugas = 0;
-        Integer jumlahujian = 0;
+            BarData thedata = new BarData(dataKegiatan(), getDataKosong());
+            barChart.setData(thedata);
+            barChart.animateXY(2000, 2000);
+            barChart.invalidate();
 
-        for (int i = 0; i < kuliah.size(); i++) {
+        } else {
 
-            jumlahkuliah = jumlahkuliah + kuliah.get(i);
+            BarData thedata = new BarData(dataKegiatan(), getDataSet());
+            barChart.setData(thedata);
+//            barChart.setDescription("Kehadiran");
+            barChart.animateXY(2000, 2000);
+            barChart.invalidate();
 
         }
 
-        for (int i = 0; i < agenda.size(); i++) {
-
-            jumlahagenda = jumlahagenda + agenda.get(i);
-
-        }
-
-        for (int i = 0; i < tugas.size(); i++) {
-
-            jumlahtugas = jumlahtugas + tugas.get(i);
-
-        }
-
-        for (int i = 0; i < ujian.size(); i++) {
-
-            jumlahujian = jumlahujian + ujian.get(i);
-
-        }
-
-        agendahadir.setText(String.valueOf(jumlahagenda));
-        kuliahhadir.setText(String.valueOf(jumlahkuliah));
-        ujianhadir.setText(String.valueOf(jumlahujian));
-        tugashadir.setText(String.valueOf(jumlahtugas));
-
-        float convkul = (float) jumlahkuliah;
-        float convage = (float) jumlahagenda;
-        float convtug = (float) jumlahtugas;
-        float convuji = (float) jumlahujian;
-
-        data.add(new BarEntry(convkul, 0));
-        data.add(new BarEntry(convage, 1));
-        data.add(new BarEntry(convtug, 2));
-        data.add(new BarEntry(convuji, 3));
-
-        BarDataSet barDataSet = new BarDataSet(data, "Data");
-
-        ArrayList<String> kehadiran = new ArrayList<>();
-        kehadiran.add("Kuliah");
-        kehadiran.add("Agenda");
-        kehadiran.add("Tugas");
-        kehadiran.add("Ujian");
-
-
-        BarData thedata = new BarData(kehadiran, barDataSet);
-        barChart.setData(thedata);
 
         barChart.setTouchEnabled(true);
         barChart.setDragEnabled(true);
@@ -152,118 +114,175 @@ public class Kehadiran extends AppCompatActivity {
 
     }
 
+    private ArrayList<String> dataKegiatan() {
+
+        ArrayList<String> kehadiran = new ArrayList<>();
+        kehadiran.add("Kuliah");
+        kehadiran.add("Agenda");
+        kehadiran.add("Tugas");
+        kehadiran.add("Ujian");
+
+        return kehadiran;
+
+    }
+
     private ArrayList<BarDataSet> getDataSet() {
-        ArrayList<BarDataSet> dataSets = null;
-
-        ArrayList<BarEntry> kuliahValue = new ArrayList<>();
-        BarEntry v1e1 = new BarEntry(110.000f, 0); // Jan
-        kuliahValue.add(v1e1);
 
 
-        ArrayList<BarEntry> ujianValue = new ArrayList<>();
-        BarEntry v2e1 = new BarEntry(10.000f, 1); // Jan
-        ujianValue.add(v2e1);
+        for (int i = 0; i < kehadiran.size(); i++) {
+
+            KehadiranClassData d = kehadiran.get(i);
+
+            if (d.getKegiatan().equals("Kuliah")) {
+
+                if (d.getStatus().equals("1")) {
+
+                    jmlkuliah = jmlkuliah + 1;
+
+                } else {
+
+                    blskuliah = blskuliah + 1;
+
+                }
+
+            } else if (d.getKegiatan().equals("Tugas")) {
+
+                if (d.getStatus().equals("1")) {
+
+                    jmltugas = jmltugas + 1;
+
+                } else {
+
+                    blstugas = blstugas + 1;
+
+                }
+
+            } else if (d.getKegiatan().equals("Ujian")) {
+
+                if (d.getStatus().equals("1")) {
+
+                    jmlujian = jmlujian + 1;
+
+                } else {
+
+                    blsujian = blsujian + 1;
+
+                }
+
+            } else {
+
+                if (d.getStatus().equals("1")) {
+
+                    jmlagenda = jmlagenda + 1;
+
+                } else {
+
+                    blsagenda = blsagenda + 1;
+
+                }
+
+            }
+
+        }
+
+        kuliah.add(jmlkuliah);
+        kuliahhadir.setText(String.valueOf(jmlkuliah));
+        kuliahbolos.setText(String.valueOf(blskuliah));
+
+        agenda.add(jmlagenda);
+        agendahadir.setText(String.valueOf(jmlagenda));
+        agendabolos.setText(String.valueOf(blsagenda));
+
+        tugas.add(jmltugas);
+        tugashadir.setText(String.valueOf(jmltugas));
+        tugasbolos.setText(String.valueOf(blstugas));
+
+        ujian.add(jmlujian);
+        ujianhadir.setText(String.valueOf(jmlujian));
+        ujianbolos.setText(String.valueOf(jmlujian));
+
+        float convkul = (float) blskuliah;
+        float convage = (float) blsagenda;
+        float convtug = (float) blstugas;
+        float convuji = (float) blsujian;
+
+        float convkulbls = (float) jmlkuliah;
+        float convagebls = (float) jmlagenda;
+        float convtugbls = (float) jmltugas;
+        float convujibls = (float) jmlujian;
+
+        data.add(new BarEntry(convkul, 0));
+        data.add(new BarEntry(convage, 1));
+        data.add(new BarEntry(convtug, 2));
+        data.add(new BarEntry(convuji, 3));
+
+        databolos.add(new BarEntry(convkulbls, 0));
+        databolos.add(new BarEntry(convagebls, 1));
+        databolos.add(new BarEntry(convtugbls, 2));
+        databolos.add(new BarEntry(convujibls, 3));
 
 
-        ArrayList<BarEntry> tugasValue = new ArrayList<>();
-        BarEntry tugas1 = new BarEntry(150.000f, 2); // Jan
-        tugasValue.add(tugas1);
-
-        ArrayList<BarEntry> agendaValue = new ArrayList<>();
-        BarEntry agenda1 = new BarEntry(90.000f, 3); // Jan
-        agendaValue.add(agenda1);
-
-        BarDataSet kuliahBar = new BarDataSet(kuliahValue, "Kuliah");
-        kuliahBar.setColor(Color.parseColor("#6DC38F"));
-
-        BarDataSet ujianBar = new BarDataSet(ujianValue, "Tugas");
-        ujianBar.setColor(Color.parseColor("#FDD362"));
-
-        BarDataSet tugasBar = new BarDataSet(tugasValue, "Ujian");
-        tugasBar.setColor(Color.parseColor("#EF4B4F"));
-
-        BarDataSet agendaBar = new BarDataSet(agendaValue, "Agenda");
-        agendaBar.setColor(Color.parseColor("#00AFEF"));
+        BarDataSet barDataHadir = new BarDataSet(data, "Hadir");
+        barDataHadir.setColor(Color.parseColor("#6DC38F"));
+        BarDataSet barDataBolos= new BarDataSet(databolos, "Tidak Hadir");
+        barDataBolos.setColor(Color.parseColor("#f11435"));
 
         dataSets = new ArrayList<>();
-        dataSets.add(kuliahBar);
-        dataSets.add(ujianBar);
-        dataSets.add(tugasBar);
-        dataSets.add(agendaBar);
+        dataSets.add(barDataHadir);
+        dataSets.add(barDataBolos);
+
         return dataSets;
     }
 
-    private ArrayList<String> getXAxisValues() {
-        ArrayList<String> bulan = new ArrayList<>();
-        bulan.add("Kuliah");
-        bulan.add("Agenda");
-        bulan.add("Tugas");
-        bulan.add("Ujian");
+    private ArrayList<BarDataSet> getDataKosong() {
 
-        return bulan;
+        kuliah.add(jmlkuliah);
+        kuliahhadir.setText(String.valueOf(jmlkuliah));
+        kuliahbolos.setText(String.valueOf(blskuliah));
 
-    }
+        agenda.add(jmlagenda);
+        agendahadir.setText(String.valueOf(jmlagenda));
+        agendabolos.setText(String.valueOf(blsagenda));
 
-    public void createRandomBarGraph(String Date1, String Date2) {
+        tugas.add(jmltugas);
+        tugashadir.setText(String.valueOf(jmltugas));
+        tugasbolos.setText(String.valueOf(blstugas));
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        ujian.add(jmlujian);
+        ujianhadir.setText(String.valueOf(jmlujian));
+        ujianbolos.setText(String.valueOf(jmlujian));
 
-        try {
-            Date date1 = simpleDateFormat.parse(Date1);
-            Date date2 = simpleDateFormat.parse(Date2);
+        float convkul = (float) blskuliah;
+        float convage = (float) blsagenda;
+        float convtug = (float) blstugas;
+        float convuji = (float) blsujian;
 
-            Calendar mDate1 = Calendar.getInstance();
-            Calendar mDate2 = Calendar.getInstance();
-            mDate1.clear();
-            mDate2.clear();
+        float convkulbls = (float) jmlkuliah;
+        float convagebls = (float) jmlagenda;
+        float convtugbls = (float) jmltugas;
+        float convujibls = (float) jmlujian;
 
-            mDate1.setTime(date1);
-            mDate2.setTime(date2);
+        data.add(new BarEntry(convkul, 0));
+        data.add(new BarEntry(convage, 1));
+        data.add(new BarEntry(convtug, 2));
+        data.add(new BarEntry(convuji, 3));
 
-            dates = new ArrayList<>();
-            dates = getList(mDate1, mDate2);
+        databolos.add(new BarEntry(convkulbls, 0));
+        databolos.add(new BarEntry(convagebls, 1));
+        databolos.add(new BarEntry(convtugbls, 2));
+        databolos.add(new BarEntry(convujibls, 3));
 
-            barEntries = new ArrayList<>();
-            float max = 0f;
-            float value = 0f;
-            random = new Random();
-            for (int j = 0; j < dates.size(); j++) {
-                max = 100f;
-                value = random.nextFloat() * max;
-                barEntries.add(new BarEntry(value, j));
-            }
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        BarDataSet barDataHadir = new BarDataSet(data, "Hadir");
+        barDataHadir.setColor(Color.parseColor("#6DC38F"));
+        BarDataSet barDataBolos= new BarDataSet(databolos, "Tidak Hadir");
+        barDataBolos.setColor(Color.parseColor("#f11435"));
 
-        BarDataSet barDataSet = new BarDataSet(barEntries, "Dates");
-        BarData barData = new BarData(dates, barDataSet);
-        barChart.setData(barData);
-        barChart.setDescription("My First Bar Graph!");
+        dataSets = new ArrayList<>();
+        dataSets.add(barDataHadir);
+        dataSets.add(barDataBolos);
 
-    }
-
-    public ArrayList<String> getList(Calendar startDate, Calendar endDate) {
-        ArrayList<String> list = new ArrayList<String>();
-        while (startDate.compareTo(endDate) <= 0) {
-            list.add(getDate(startDate));
-            startDate.add(Calendar.DAY_OF_MONTH, 1);
-        }
-        return list;
-    }
-
-    public String getDate(Calendar cld) {
-        String curDate = cld.get(Calendar.YEAR) + "/" + (cld.get(Calendar.MONTH) + 1) + "/" + cld.get(Calendar.DAY_OF_MONTH);
-
-        try {
-            Date date = new SimpleDateFormat("yyyy/MM/dd").parse(curDate);
-            curDate = new SimpleDateFormat("yyy/MM/dd").format(date);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return curDate;
+        return dataSets;
     }
 
 }

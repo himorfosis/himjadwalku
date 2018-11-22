@@ -32,6 +32,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS tabeltugas (Id INTEGER PRIMARY KEY AUTOINCREMENT, tugas VARCHAR, keterangan VARCHAR, tanggal VARCHAR, jammasuk VARCHAR, gedung VARCHAR, dosen VARCHAR, gambar BLOB, pengingat VARCHAR);");
         db.execSQL("CREATE TABLE tabelnotifikasi  (id_notifikasi INTEGER PRIMARY KEY AUTOINCREMENT, id_music TEXT NOT NULL, menu TEXT NOT NULL);");
         db.execSQL("CREATE TABLE tabelujian (id_ujian INTEGER PRIMARY KEY AUTOINCREMENT, ujian TEXT NOT NULL, tanggal TEXT NOT NULL, jammasuk TEXT NOT NULL, gedung TEXT NOT NULL, ruang TEXT NOT NULL, dosen TEXT NOT NULL, pengingat TEXT NOT NULL);");
+        db.execSQL("CREATE TABLE tabelkehadiran (id_kehadiran INTEGER PRIMARY KEY AUTOINCREMENT, kegiatan TEXT NOT NULL, status TEXT NOT NULL, waktu TEXT NOT NULL);");
 
     }
 
@@ -46,8 +47,53 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS tabelnotifikasi");
         db.execSQL("DROP TABLE IF EXISTS tabeltugas");
         db.execSQL("DROP TABLE IF EXISTS tabelujian");
+        db.execSQL("DROP TABLE IF EXISTS tabelkehadiran");
 
         onCreate(db);
+    }
+
+    /**
+     * ===================== KEHADIRAN ===========================
+     */
+
+    public void insertkehadiran(KehadiranClassData classdata) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put("id_kehadiran", classdata.getId_kehadiran());
+        cv.put("kegiatan", classdata.getKegiatan());
+        cv.put("status", classdata.getStatus());
+        cv.put("waktu", classdata.getStatus());
+
+        db.insert("tabelkehadiran", null, cv);
+        db.close();
+
+    }
+
+    public List<KehadiranClassData> getKehadiran() {
+        List<KehadiranClassData> dataArray = new ArrayList<KehadiranClassData>();
+        String query = "SELECT * FROM tabelkehadiran" ;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null );
+        if (cursor.moveToFirst()) {
+            do {
+                KehadiranClassData datalist = new KehadiranClassData(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                dataArray.add(datalist);
+
+            } while (cursor.moveToNext());
+        }
+        return dataArray;
+    }
+
+    public void deleteKehadiran(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] args={id};
+        ContentValues cv = new ContentValues();
+
+        db.delete("tabelkehadiran", "id_kehadiran=?", args);
+        db.close();
+
     }
 
 

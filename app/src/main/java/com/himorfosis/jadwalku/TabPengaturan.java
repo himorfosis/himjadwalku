@@ -18,6 +18,8 @@ public class TabPengaturan extends Fragment {
 
     int pilihalarm, pilihdurasi;
 
+    int presensi;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +42,10 @@ public class TabPengaturan extends Fragment {
         LinearLayout pilihgetarnotif = view.findViewById(R.id.pilihgetarnotif);
         LinearLayout durasipresensi = view.findViewById(R.id.durasipresensi);
 
+        presensi = SharedPref.getIntPref("durasipresensi", "presensi", getActivity());
+
+        isidurasi.setText(durasi[presensi]);
+
 
         durasipresensi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +54,7 @@ public class TabPengaturan extends Fragment {
                 AlertDialog dialog = new AlertDialog.Builder(getContext())
 
                         .setTitle("Waktu presensi setelah kegiatan di mulai")
-                        .setSingleChoiceItems(durasi, 0, new DialogInterface.OnClickListener() {
+                        .setSingleChoiceItems(durasi, presensi, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
@@ -72,6 +78,10 @@ public class TabPengaturan extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 SharedPref.saveIntPref("durasipresensi", "presensi", pilihdurasi, getContext());
+
+                                int presensi = SharedPref.getIntPref("durasipresensi", "presensi", getActivity());
+
+                                isidurasi.setText(durasi[presensi]);
 
                             }
                         })
